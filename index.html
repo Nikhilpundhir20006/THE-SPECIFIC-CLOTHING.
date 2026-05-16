@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Specific Clothing | Official Store</title>
+    <style>
+        :root { --brand-color: #222; --accent-color: #fb641b; --btn-blue: #2874f0; --star-color: #ffc107; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; background-color: #f1f3f6; }
+
+        /* Background Logo Watermark */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('1000286526.jpg'); background-repeat: no-repeat;
+            background-position: center; background-size: 40%; opacity: 0.05; z-index: -1;
+        }
+
+        header { background: #fff; padding: 12px 5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: bold; border: 2px solid #000; padding: 5px 12px; font-size: 1.1rem; background: #fff; }
+
+        .container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
+        .product-card { background: #fff; padding: 10px; border-radius: 4px; text-align: center; cursor: pointer; border: 1px solid #eee; position: relative; }
+        .product-card img { width: 100%; border-radius: 4px; height: 200px; object-fit: cover; }
+        .free-delivery-tag { position: absolute; top: 15px; right: 15px; background: #388e3c; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+        .p-price { font-weight: bold; color: #212121; margin-top: 5px; font-size: 14px; }
+        .rating-mini { color: var(--star-color); font-size: 12px; margin-top: 3px; }
+
+        .detail-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 2000; overflow-y: auto; }
+        .back-nav { padding: 15px; font-size: 20px; border-bottom: 1px solid #eee; cursor: pointer; background: #fff; position: sticky; top: 0; z-index: 10; }
+
+        .gallery-container { width: 100%; padding: 10px 0; background: #fff; text-align: center; }
+        .main-display-img { width: 100%; max-width: 400px; height: 450px; object-fit: cover; border-radius: 8px; }
+        .thumb-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; padding: 0 10px; }
+        .thumb { width: 65px; height: 80px; object-fit: cover; border: 2px solid #eee; border-radius: 4px; cursor: pointer; }
+        .thumb.active { border-color: var(--btn-blue); }
+
+        .product-info-box { padding: 20px; background: #fff; }
+        .price-tag { font-size: 26px; font-weight: bold; color: #212121; margin: 10px 0; }
+        
+        .policy-badges { display: flex; justify-content: space-around; background: #f9f9f9; padding: 10px; border-radius: 8px; margin: 15px 0; border: 1px solid #eee; }
+        .p-item { text-align: center; font-size: 11px; color: #333; font-weight: bold; }
+        .p-icon { font-size: 20px; display: block; margin-bottom: 3px; }
+
+        .s-btn { border: 1px solid #ddd; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; background: #fff; }
+        .s-btn.selected { background: var(--btn-blue); color: #fff; border-color: var(--btn-blue); }
+
+        .review-box { margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; text-align: left; }
+        .review-item { margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; padding-bottom: 10px; }
+        .rev-name { font-weight: bold; font-size: 14px; display: block; }
+        .rev-stars { color: var(--star-color); font-size: 12px; }
+        .rev-text { font-size: 13px; color: #555; margin-top: 4px; display: block; font-style: italic; }
+
+        .action-bar { position: sticky; bottom: 0; display: flex; width: 100%; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .btn-buy { flex: 1; background: var(--accent-color); color: #fff; padding: 18px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; }
+
+        .order-modal { display: none; position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px; border-radius: 20px 20px 0 0; z-index: 3000; box-sizing: border-box; }
+        .input-box { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+
+        footer { background: #222; color: #fff; text-align: center; padding: 30px 10px; margin-top: 20px; }
+        footer a { color: #fb641b; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">S<br><small>THE SPECIFIC</small></div>
+        <div style="font-weight: bold; font-size: 14px; color: var(--btn-blue);">☎ 9548486977</div>
+    </header>
+
+    <div class="container" id="mainGrid">
+        </div>
+
+    <div id="detailView" class="detail-page">
+        <div class="back-nav" onclick="closeDetails()">← <span style="margin-left:10px;">Product Details</span></div>
+        <div class="gallery-container">
+            <img id="mainImage" class="main-display-img" src="">
+            <div class="thumb-row" id="thumbGallery"></div>
+        </div>
+        <div class="product-info-box">
+            <h2 id="displayTitle" style="margin:0;"></h2>
+            <div id="displayPrice" class="price-tag"></div>
+            
+            <div class="policy-badges">
+                <div class="p-item"><span class="p-icon">🚚</span>7 Day Delivery</div>
+                <div class="p-item"><span class="p-icon">🔄</span>10 Day Return</div>
+                <div class="p-item"><span class="p-icon">✅</span>Free Delivery</div>
+            </div>
+
+            <div class="size-selector">
+                <b>Select Size</b>
+                <div class="size-btns">
+                    <div class="s-btn" onclick="selSize(this)">S</div>
+                    <div class="s-btn" onclick="selSize(this)">M</div>
+                    <div class="s-btn selected" onclick="selSize(this)">L</div>
+                    <div class="s-btn" onclick="selSize(this)">XL</div>
+                    <div class="s-btn" onclick="selSize(this)">XXL</div>
+                </div>
+            </div>
+
+            <div class="review-box" id="reviewsContainer">
+                </div>
+        </div>
+        <div class="action-bar">
+            <button class="btn-buy" onclick="document.getElementById('orderSheet').style.display='block'">BUY NOW</button>
+        </div>
+    </div>
+
+    <div id="orderSheet" class="order-modal">
+        <h3>Delivery Details</h3>
+        <input type="text" id="custName" class="input-box" placeholder="Customer Name">
+        <input type="tel" id="custPhone" class="input-box" placeholder="Mobile Number">
+        <textarea id="custAddr" class="input-box" rows="3" placeholder="Full Address with Pincode"></textarea>
+        <button class="btn-buy" style="width:100%; border-radius:6px;" onclick="sendWhatsAppOrder()">CONFIRM ON WHATSAPP</button>
+        <button onclick="this.parentElement.style.display='none'" style="width:100%; border:none; background:none; padding:15px; color:#878787;">Cancel</button>
+    </div>
+
+    <footer>
+        <p><strong>THE SPECIFIC CLOTHING</strong></p>
+        <p>Email: <a href="mailto:thespecificclothing@gmail.com">thespecificclothing@gmail.com</a></p>
+        <p>7 Day Delivery | 10 Day Return | Cash on Delivery</p>
+        <p>Contact: 9548486977 | Kasganj, UP</p>
+    </footer>
+
+    <script>
+        const products = [
+            { title: "Yellow Ikat Kurti", price: "₹349", img: "1000287506.jpg", rating: "★★★★★ (18)", gallery: ["1000287506.jpg", "1000287508.jpg", "1000287514.jpg", "1000287512.jpg"], reviews: [{name: "Megha", star: "★★★★★", text: "Bilkul photo jaisa hai!"}, {name: "Suman", star: "★★★★★", text: "Kapda bahut soft hai."}] },
+            { title: "Blue Ikat Kurti", price: "₹349", img: "1000287520.jpg", rating: "★★★★☆ (12)", gallery: ["1000287520.jpg", "1000287520.jpg", "1000287520.jpg", "1000287520.jpg"], reviews: [{name: "Ritu", star: "★★★★☆", text: "Office ke liye perfect hai."}, {name: "Nisha", star: "★★★★★", text: "Great quality."}] },
+            { title: "Black Printed Kurti", price: "₹349", img: "1000287528.jpg", rating: "★★★★★ (24)", gallery: ["1000287528.jpg", "1000287528.jpg", "1000287528.jpg", "1000287528.jpg"], reviews: [{name: "Pooja", star: "★★★★★", text: "Party wear look deta hai."}, {name: "Kajal", star: "★★★★★", text: "Gold print bahut pyara hai."}] },
+            { title: "White Floral Kurti", price: "₹349", img: "1000287485.jpg", rating: "★★★★★ (15)", gallery: ["1000287485.jpg", "1000287485.jpg", "1000287485.jpg", "1000287485.jpg"], reviews: [{name: "Anita", star: "★★★★★", text: "Very elegant design."}, {name: "Sneha", star: "★★★★★", text: "Summer ke liye best hai."}] },
+            { title: "Blue Floral Kurti", price: "₹349", img: "1000287530.jpg", rating: "★★★★☆ (9)", gallery: ["1000287530.jpg", "1000287530.jpg", "1000287530.jpg", "1000287530.jpg"], reviews: [{name: "Preeti", star: "★★★★☆", text: "Design bahut accha hai."}, {name: "Deepa", star: "★★★★★", text: "Fitting perfect aayi."}] },
+            { title: "Maroon Kurti", price: "₹349", img: "1000286529.jpg", rating: "★★★★★ (21)", gallery: ["1000286529.jpg", "1000286529.jpg", "1000286529.jpg", "1000286529.jpg"], reviews: [{name: "Rekha", star: "★★★★★", text: "Color bahut deep aur rich hai."}, {name: "Anjali", star: "★★★★★", text: "Wash karne ke baad bhi naya hai."}] }
+        ];
+
+        let selectedSize = "L";
+        let currentPhoto = "";
+
+        // Load Grid
+        let gridHtml = '';
+        products.forEach((p, i) => {
+            gridHtml += `<div class="product-card" onclick="openDetails(${i})"><span class="free-delivery-tag">FREE DELIVERY</span><img src="${p.img}"><div class="p-price">${p.title} - ${p.price}</div><div class="rating-mini">${p.rating}</div></div>`;
+        });
+        document.getElementById('mainGrid').innerHTML = gridHtml;
+
+        function openDetails(idx) {
+            const p = products[idx];
+            document.getElementById('displayTitle').innerText = p.title;
+            document.getElementById('displayPrice').innerText = p.price;
+            document.getElementById('mainImage').src = p.img;
+            currentPhoto = p.img;
+            let thumbHtml = '';
+            p.gallery.forEach((img, i) => { thumbHtml += `<img src="${img}" class="thumb ${i===0?'active':''}" onclick="changeImg('${img}', this)">`; });
+            document.getElementById('thumbGallery').innerHTML = thumbHtml;
+            let revHtml = '<b>Customer Reviews</b>';
+            p.reviews.forEach(r => { revHtml += `<div class="review-item"><span class="rev-name">${r.name}</span><span class="rev-stars">${r.star}</span><span class="rev-text">${r.text}</span></div>`; });
+            document.getElementById('reviewsContainer').innerHTML = revHtml;
+            document.getElementById('detailView').style.display = 'block';
+        }
+
+        function changeImg(src, el) { document.getElementById('mainImage').src = src; currentPhoto = src; document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+        function selSize(el) { document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('selected')); el.classList.add('selected'); selectedSize = el.innerText; }
+        function closeDetails() { document.getElementById('detailView').style.display = 'none'; }
+
+        function sendWhatsAppOrder() {
+            let name = document.getElementById('custName').value;
+            let phone = document.getElementById('custPhone').value;
+            let address = document.getElementById('custAddr').value;
+            if(!name || !phone || !address) { alert("Details bharein!"); return; }
+            let msg = `*Naya Order Received!*%0A%0A*Kurti:* ${document.getElementById('displayTitle').innerText}%0A*Size:* ${selectedSize}%0A*Photo:* ${currentPhoto}%0A%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}`;
+            window.open(`https://wa.me/919548486977?text=${msg}`, '_blank');
+        }
+    </script>
+</body>
+</html>
